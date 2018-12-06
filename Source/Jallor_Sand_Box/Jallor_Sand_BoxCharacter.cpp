@@ -115,5 +115,20 @@ void AJallor_Sand_BoxCharacter::MoveRight(float Value)
 
 void AJallor_Sand_BoxCharacter::PrimaryFire()
 {
-	UE_LOG(LogTemp, Log, TEXT("HELLO"));
+	UE_LOG(LogTemp, Log, TEXT("Spawn SmallBall"));
+
+	if (BallToSpawn)
+	{
+		UWorld *w = GetWorld();
+		if (w)
+		{
+			FVector Location;
+			Location = this->GetActorLocation();
+			FRotator Rotation(0.0f, 0.0f, 0.0f);
+			FActorSpawnParameters SpawnInfo;
+			SpawnInfo.Owner = this;
+
+			w->SpawnActor<ASimpleBall>(BallToSpawn, Location, Rotation, SpawnInfo);
+		}
+	}
 }

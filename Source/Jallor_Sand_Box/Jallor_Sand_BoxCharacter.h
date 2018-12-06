@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "SimpleBall.h"
+
 #include "Jallor_Sand_BoxCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -28,6 +30,9 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class ASimpleBall> BallToSpawn;
 
 protected:
 
