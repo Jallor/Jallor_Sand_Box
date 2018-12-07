@@ -45,6 +45,8 @@ AJallor_Sand_BoxCharacter::AJallor_Sand_BoxCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	mCurrentWeapon = SPAWN_BALL;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -60,6 +62,8 @@ void AJallor_Sand_BoxCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAxis("MoveForward", this, &AJallor_Sand_BoxCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AJallor_Sand_BoxCharacter::MoveRight);
 
+	PlayerInputComponent->BindAction("ScrollUp", IE_Pressed, this, &AJallor_Sand_BoxCharacter::ScrollUp);
+	PlayerInputComponent->BindAction("ScrollDown", IE_Pressed, this, &AJallor_Sand_BoxCharacter::ScrollDown);
 	PlayerInputComponent->BindAction("PrimaryFire", IE_Pressed, this, &AJallor_Sand_BoxCharacter::PrimaryFire);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
@@ -113,6 +117,21 @@ void AJallor_Sand_BoxCharacter::MoveRight(float Value)
 	}
 }
 
+void AJallor_Sand_BoxCharacter::ScrollUp()
+{
+	mCurrentWeapon = eWeapon(mCurrentWeapon + 1);
+	if (mCurrentWeapon == NB_WEAPON)
+		mCurrentWeapon = eWeapon(0);
+}
+
+void AJallor_Sand_BoxCharacter::ScrollDown()
+{
+	if (mCurrentWeapon == eWeapon(0))
+		mCurrentWeapon = eWeapon(NB_WEAPON - 1);
+	else
+		mCurrentWeapon = eWeapon(mCurrentWeapon - 1);
+}
+
 void AJallor_Sand_BoxCharacter::PrimaryFire()
 {
 	UE_LOG(LogTemp, Log, TEXT("Spawn SmallBall"));
@@ -124,9 +143,12 @@ void AJallor_Sand_BoxCharacter::PrimaryFire()
 		{
 			FVector Location;
 			Location = this->GetActorLocation();
-			FRotator Rotation(0.0f, 0.0f, 0.0f);
+			FRotator Rotation;
+			Rotation = this->GetActorRotation();
 			FActorSpawnParameters SpawnInfo;
 			SpawnInfo.Owner = this;
+
+			Location += Rotation.RotateVector(FVector(15, 0, 0));
 
 			w->SpawnActor<ASimpleBall>(BallToSpawn, Location, Rotation, SpawnInfo);
 		}

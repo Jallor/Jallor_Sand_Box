@@ -20,6 +20,7 @@ class AJallor_Sand_BoxCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
 public:
 	AJallor_Sand_BoxCharacter();
 
@@ -54,8 +55,18 @@ protected:
 	 */
 	void LookUpAtRate(float Rate);
 
+	void ScrollUp();
+	void ScrollDown();
 	void PrimaryFire();
 
+	enum eWeapon
+	{
+		SPAWN_BALL = 0,
+
+		NB_WEAPON
+	};
+
+	eWeapon mCurrentWeapon;
 
 protected:
 	// APawn interface
